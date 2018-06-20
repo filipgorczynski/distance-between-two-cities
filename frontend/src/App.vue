@@ -16,7 +16,7 @@ html {
 }
 body {
     height: 100%;
-    background: linear-gradient(135deg, #4ab383, #3b5559);
+    background: linear-gradient(135deg, #44b682, #384a5e);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover
