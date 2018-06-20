@@ -34,8 +34,8 @@
           <button class="btn btn-primary btn-block" @click.prevent="calculate" :disabled="!btnEnabled">Calculate</button>
         </div>
     </form>
-    <div class="calculated-distance alert alert-success" v-show="calculatedDistance">Calculated distance: {{ calculatedDistance | kilometer }}</div>
-    <p class="well"><a href="https://en.wikipedia.org/wiki/Haversine_formula">Haversine formula</a></p>
+    <div class="alert alert-success" v-show="calculatedDistance">Calculated distance: {{ calculatedDistance | kilometer }}</div>
+    <p><a href="https://en.wikipedia.org/wiki/Haversine_formula">Haversine formula</a></p>
   </div>
 </template>
 
