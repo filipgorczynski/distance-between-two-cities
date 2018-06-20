@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style>
-html {
+/* html {
     height: 100%;
 }
 body {
@@ -20,5 +20,5 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover
-}
+} */
 </style>

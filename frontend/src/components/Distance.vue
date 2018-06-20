@@ -1,34 +1,37 @@
 <template>
   <div class="container">
-    <h1 v-if="false">{{ appTitle }}</h1>
+    <h1 v-show="false">{{ appTitle }}</h1>
     <form class="row" role="form">
         <div class="form-group col-md-6">
-          <label for="start">Starting point</label>
+          <label for="source">Starting point</label>
           <input
             type="text"
             class="form-control"
-            id="start"
+            id="source"
             aria-describedby="startHelp"
             placeholder="Start here"
-            v-model="source"
-            @blur="searchCoordinates('source', source)">
-          <small id="startHelp" class="form-text">Address or coordinates</small>
+            v-model="sourceAddress"
+            @blur="searchCoordinates('source', sourceAddress)">
         </div>
         <div class="form-group col-md-6">
-          <label for="end">Ending point</label>
+          <label for="destination">Ending point</label>
           <input
             type="text"
             class="form-control"
-            id="end"
+            id="destination"
             aria-describedby="endHelp"
             placeholder="... and finish here"
-            v-model="destination"
-            @blur="searchCoordinates('destination', destination)"
+            v-model="destinationAddress"
+            @blur="searchCoordinates('destination', destinationAddress)"
             >
-          <small id="endHelp" class="form-text">Address or coordinates</small>
+        </div>
+        <div class="orbit-spinner" v-show="loading">
+          <div class="orbit"></div>
+          <div class="orbit"></div>
+          <div class="orbit"></div>
         </div>
         <div class="form-group col-md-12">
-          <button class="btn btn-primary" @click.prevent="calculate">Calculate</button>
+          <button class="btn btn-primary btn-block" @click.prevent="calculate" :disabled="!btnEnabled">Calculate</button>
         </div>
     </form>
     <div class="calculated-distance alert alert-success" v-show="calculatedDistance">Calculated distance: {{ calculatedDistance | kilometer }}</div>
@@ -45,26 +48,40 @@ export default {
   data () {
     return {
       appTitle: 'Calculate Distance',
-      source: '',
-      destination: '',
+      sourceAddress: '',
+      destinationAddress: '',
       coords: {},
-      calculatedDistance: null
+      calculatedDistance: null,
+      btnEnabled: false,
+      loading: false
     };
   },
   methods: {
     searchCoordinates: function (ref, address) {
-      // var googleGeocodingApi = 'http://maps.google.com/maps/api/geocode/json?address=';
+      if (!address) {
+        this.btnEnabled = false;
+        this.calculatedDistance = '';
+        delete this.coords[ref];
+        return;
+      }
+      this.loading = true;
       var openStreetMapApi = 'https://nominatim.openstreetmap.org/search?format=json&q=';
 
       axios.get(openStreetMapApi + address)
         .then((response) => {
           if (response.status === 200) {
             var result = response.data[0];
-            this.coords[ref] = {
-              'lat': result['lat'],
-              'lon': result['lon']
-            };
-            this.$forceUpdate();
+            if (result) {
+              this.coords[ref] = {
+                'lat': result['lat'],
+                'lon': result['lon']
+              };
+              if (this.coords['source'] && this.coords['destination']) {
+                this.btnEnabled = true;
+              }
+              this.$forceUpdate();
+              this.loading = false;
+            }
           }
         })
         .catch(e => {
@@ -97,5 +114,73 @@ export default {
 <style scope>
 .form-group {
   padding: 10px;
+}
+
+.orbit-spinner, .orbit-spinner * {
+  box-sizing: border-box;
+}
+
+.orbit-spinner {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  perspective: 800px;
+  margin: 10px auto;
+}
+
+.orbit-spinner .orbit {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.orbit-spinner .orbit:nth-child(1) {
+  left: 0%;
+  top: 0%;
+  animation: orbit-spinner-orbit-one-animation 1200ms linear infinite;
+  border-bottom: 3px solid #007bff;
+}
+
+.orbit-spinner .orbit:nth-child(2) {
+  right: 0%;
+  top: 0%;
+  animation: orbit-spinner-orbit-two-animation 1200ms linear infinite;
+  border-right: 3px solid #007bff;
+}
+
+.orbit-spinner .orbit:nth-child(3) {
+  right: 0%;
+  bottom: 0%;
+  animation: orbit-spinner-orbit-three-animation 1200ms linear infinite;
+  border-top: 3px solid #007bff ;
+}
+
+@keyframes orbit-spinner-orbit-one-animation {
+  0% {
+    transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+  }
+}
+
+@keyframes orbit-spinner-orbit-two-animation {
+  0% {
+    transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+  }
+}
+
+@keyframes orbit-spinner-orbit-three-animation {
+  0% {
+    transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+  }
 }
 </style>
