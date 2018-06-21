@@ -1,0 +1,20 @@
+language: node_js
+
+node_js:
+  - "stable"
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+env:
+  - TRAVIS_BUILD_DIR=frontend
+
+before_script:
+  - yarn
+
+script:
+  - npm run unit
+
+
