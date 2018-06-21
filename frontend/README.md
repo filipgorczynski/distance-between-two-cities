@@ -1,4 +1,4 @@
-# DistancR <a href="https://api.travis-ci.org/filipgorczynski/distance-between-two-cities.svg?branch=master">
+# DistancR <a href="https://api.travis-ci.org/filipgorczynski/distance-between-two-cities/"><img src="https://travis-ci.org/filipgorczynski/distance-between-two-cities.svg?branch=master" alt="Build status" /></a>
 
 > Frontend for distance between two cities application
 
