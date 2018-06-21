@@ -12,6 +12,7 @@ env:
   - TRAVIS_BUILD_DIR=frontend
 
 before_script:
+  - cd frontend
   - yarn
 
 script:
