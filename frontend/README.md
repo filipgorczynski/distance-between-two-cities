@@ -1,4 +1,4 @@
-# distancer
+# DistancR <a href="https://api.travis-ci.org/filipgorczynski/distance-between-two-cities.svg?branch=master">
 
 > Frontend for distance between two cities application
 
